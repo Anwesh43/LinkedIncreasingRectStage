@@ -45,6 +45,7 @@ class State {
     startUpdating(cb : Function) {
         if (this.dir == 0) {
             this.dir = 1 - 2 * this.prevScale
+            cb()
         }
     }
 }
@@ -67,5 +68,56 @@ class Animator {
             this.animated = false
             clearInterval(this.interval)
         }
+    }
+}
+
+class RISNode {
+    prev : RISNode
+    next : RISNode
+    state : State = new State()
+    constuctor(private i : number) {
+        this.addNeighbor()
+    }
+
+    addNeighbor() {
+        if (this.i < nodes - 1) {
+            this.next = new RISNode()
+            this.next.prev = this
+        }
+    }
+
+    update(cb : Function) {
+        this.state.update(cb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
+    }
+
+    getNext(dir: number, cb : Function) : RISNode {
+        var curr : RISNode = this.prev
+        if (dir == 1) {
+            curr = this.next
+        }
+        if (curr) {
+            return this
+        }
+        cb()
+        return this
+    }
+
+    draw(context : CanvasRenderingContext2D) {
+        const wGap : number =  w / nodes
+        const hGap : number = h / nodes
+        const alpha : number = (this.i + 1) / nodes
+        context.fillStyle = '#c3ae4d'
+        if (this.next) {
+            this.next.draw(context)
+        }
+        context.save()
+        context.globalAlpha = alpha
+        context.translate(w/2, h/2)
+        context.fillRect(-wGap/2, -hGap/2 + hGap * this.state.scale, wGap, hGap * (1 - this.state.scale))
+        context.restore()
     }
 }
