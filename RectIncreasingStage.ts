@@ -119,16 +119,16 @@ class RISNode {
             curr = this.next
         }
         if (curr) {
-            return this
+            return curr
         }
         cb()
         return this
     }
 
     draw(context : CanvasRenderingContext2D) {
-        const wGap : number =  w / nodes
-        const hGap : number = h / nodes
-        const alpha : number = (this.i + 1) / nodes
+        const wGap : number =  (w / nodes) * (1 + this.i)
+        const hGap : number = (h / nodes) * (1 + this.i)
+        const alpha : number = (5 - this.i) / nodes
         context.fillStyle = '#c3ae4d'
         if (this.next) {
             this.next.draw(context)
