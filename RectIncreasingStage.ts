@@ -75,13 +75,13 @@ class RISNode {
     prev : RISNode
     next : RISNode
     state : State = new State()
-    constuctor(private i : number) {
+    constructor(private i : number) {
         this.addNeighbor()
     }
 
     addNeighbor() {
         if (this.i < nodes - 1) {
-            this.next = new RISNode()
+            this.next = new RISNode(this.i + 1)
             this.next.prev = this
         }
     }
@@ -119,5 +119,28 @@ class RISNode {
         context.translate(w/2, h/2)
         context.fillRect(-wGap/2, -hGap/2 + hGap * this.state.scale, wGap, hGap * (1 - this.state.scale))
         context.restore()
+    }
+}
+
+class LinkedIncreasingRect {
+
+    curr : RISNode = new RISNode(0)
+    dir : number = 1
+
+    draw(context : CanvasRenderingContext2D) {
+        this.curr.draw(context)
+    }
+
+    update(cb : Function) {
+        this.curr.update(() => {
+            this.curr = this.curr.getNext(this.dir, () => {
+                this.dir *= -1
+            })
+            cb()
+        })
+    }
+
+    startUpdating(cb : Function) {
+        this.curr.startUpdating(cb)
     }
 }
