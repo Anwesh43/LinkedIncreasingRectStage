@@ -7,7 +7,7 @@ class RectIncreasingStage {
 
     linkedIncreasingRect : LinkedIncreasingRect = new LinkedIncreasingRect()
 
-    animator : Animator = new Animator(this)
+    animator : Animator = new Animator()
 
     constructor() {
         this.initCanvas()
@@ -36,6 +36,12 @@ class RectIncreasingStage {
                 })
             })
         }
+    }
+
+    static init() {
+        const stage : RectIncreasingStage = new RectIncreasingStage()
+        stage.render()
+        stage.handleTap()
     }
 }
 
