@@ -5,6 +5,10 @@ class RectIncreasingStage {
 
     context : CanvasRenderingContext2D
 
+    linkedIncreasingRect : LinkedIncreasingRect = new LinkedIncreasingRect()
+
+    animator : Animator = new Animator(this)
+
     constructor() {
         this.initCanvas()
     }
@@ -18,11 +22,19 @@ class RectIncreasingStage {
     render() {
         this.context.fillStyle = '#212121'
         this.context.fillRect(0, 0, w, h)
+        this.linkedIncreasingRect.draw(this.context)
     }
 
     handleTap() {
         this.canvas.onmousedown = () => {
-
+            this.linkedIncreasingRect.startUpdating(() => {
+                this.animator.start(() => {
+                    this.render()
+                    this.linkedIncreasingRect.update(() => {
+                        this.animator.stop()
+                    })
+                })
+            })
         }
     }
 }
